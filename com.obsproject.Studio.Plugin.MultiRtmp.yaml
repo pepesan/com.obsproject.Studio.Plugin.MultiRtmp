@@ -1,0 +1,30 @@
+id: com.obsproject.Studio.Plugin.MultiRtmp
+branch: stable
+runtime: com.obsproject.Studio
+runtime-version: stable
+sdk: org.kde.Sdk//6.6
+build-extension: true
+separate-locales: false
+appstream-compose: false
+build-options:
+  prefix: /app/plugins/obs-multi-rtmp
+modules:
+  - name: obs-multi-rtmp
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_CXX_STANDARD=20
+      - -DCMAKE_CXX_STANDARD_REQUIRED=true
+      - -GNinja
+      - -Bbuild_dir
+      - -S.
+    post-install:
+      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/metainfo ${FLATPAK_ID}.metainfo.xml
+      - appstream-compose --basename=${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak ${FLATPAK_ID}
+    sources:
+      - type: git
+        url: https://github.com/sorayuki/obs-multi-rtmp.git
+        tag: 0.6.0.1
+        commit: bf334028452c8286c70a59a2aaaba23843362b03
+      - type: file
+        path: com.obsproject.Studio.Plugin.MultiRtmp.metainfo.xml
